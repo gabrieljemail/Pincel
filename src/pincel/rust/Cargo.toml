@@ -1,0 +1,24 @@
+[package]
+name = "pincel_core"
+version = "0.1.0"
+edition = "2021"
+description = "Core of Pincel, a retained-mode UI rendering engine."
+
+[lib]
+# staticlib is linked by the C++ side (see CMakeLists.txt); rlib lets Rust users depend on the crate directly.
+crate-type = ["staticlib", "rlib"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+# Pincel rasterizes every pixel on the CPU, which is unusably slow unoptimized, so debug builds are optimized too.
+# Debug info and overflow checks stay on, so it is still debuggable and still catches arithmetic bugs.
+opt-level = 3
+
+[dependencies]
+fontdue = "0.9.5"
+image = { version = "0.25.10", default-features = false, features = ["png", "jpeg"] }
+ttf-parser = "0.25"
